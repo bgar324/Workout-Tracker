@@ -1,0 +1,6 @@
+specifically for logging:
+* a way to reorder workouts
+* deleting a set, moving a set around within a workout
+* basically QoL
+* add a drop set or super set (though super set will probably be a future feature)
+* drop set would make the set counter go to 1.5 and have extra padding on the left
