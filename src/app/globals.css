@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('../../fonts/CabinetGrotesk_Complete/Fonts/WEB/css/cabinet-grotesk.css');
 
 :root {
   --background: #ffffff;
@@ -17,5 +18,5 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'CabinetGrotesk-Variable', Arial, Helvetica, sans-serif;
 }
