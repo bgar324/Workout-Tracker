@@ -1,22 +1,48 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import BoilerComponent from "@/components/BoilerComponent";
 
-export default function Home() {
-  const [currentDate] = useState<string>(
+export default function Home() {  const [currentDate] = useState<string>(
     new Date().toLocaleDateString("en-US", { month: "numeric", day: "numeric" })
-  ); 
+  );
   const [boilers, setBoilers] = useState<number[]>([1]);
   const [activeBoiler, setActiveBoiler] = useState<number | null>(1);
 
   const [workoutFocus, setWorkoutFocus] = useState<string>("");
   const [workoutNotes, setWorkoutNotes] = useState<string>("");
 
+  // State to store full workout data
+  const [workoutData, setWorkoutData] = useState<
+    { id: number; exerciseName: string; sets: { reps: number; weight: number }[] }[]
+  >([]);
+
   const handleAddBoiler = () => {
     const newBoilerId = boilers.length + 1;
     setBoilers([...boilers, newBoilerId]);
     setActiveBoiler(newBoilerId);
+  };
+
+  const handleDataChange = (
+    id: number,
+    exerciseName: string,
+    sets: { reps: number; weight: number }[]
+  ) => {
+    setWorkoutData((prevData) =>
+      prevData.some((data) => data.id === id)
+        ? prevData.map((data) =>
+            data.id === id ? { id, exerciseName, sets } : data
+          )
+        : [...prevData, { id, exerciseName, sets }]
+    );
+  };
+
+  const router = useRouter();
+
+  const handleSubmit = () => {
+    const workout = { workoutFocus, workoutNotes, workoutData };
+    router.push(`/results?workoutData=${encodeURIComponent(JSON.stringify(workout))}`);
   };
 
   return (
@@ -44,7 +70,6 @@ export default function Home() {
           "
         />
       </div>
-
 
       <textarea
         placeholder="Notes"
@@ -74,13 +99,22 @@ export default function Home() {
           key={id}
           isActive={activeBoiler === id}
           onFocus={() => setActiveBoiler(id)}
+          onDataChange={(exerciseName, sets) =>
+            handleDataChange(id, exerciseName, sets)
+          }
         />
       ))}
       <button
         onClick={handleAddBoiler}
-        className="mt-4 bg-red-400 text-white px-5 py-1 rounded"
+        className="mt-4 bg-red-400 text-white px-5 py-1 rounded text-4xl"
       >
         +
+      </button>
+      <button
+        onClick={handleSubmit}
+        className="mt-4 bg-green-400 text-white px-5 py-1 rounded text-4xl"
+      >
+        Submit
       </button>
     </div>
   );
